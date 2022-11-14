@@ -3,36 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MarkdownParser = void 0;
 const markdown_it_1 = __importDefault(require("markdown-it"));
-const fs_extra_1 = __importDefault(require("fs-extra"));
 const os_1 = __importDefault(require("os"));
-function reg_exp_escape(raw_str) {
-    return raw_str.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, '\\$&');
-}
-class CommonBlock {
-    constructor(content) {
-        this.content = content;
-    }
-    get_content() {
-        return this.content;
-    }
-}
-class ImageBlock {
-    constructor(src, alt, title) {
-        this.src = src;
-        this.alt = alt;
-        this.title = title;
-    }
-    get_content() {
-        return `![${this.alt}](${this.src}` + (this.title ? ` "${this.title}" ` : "") + `)`;
-    }
-}
-class MarkdownFiles {
+const utils_1 = require("./utils");
+const block_1 = require("./block");
+class MarkdownParser {
     constructor() {
         this.md = new markdown_it_1.default();
     }
     // parse markdown text to blocks(common text or image text)
-    _parse(content) {
+    parse(content) {
         let blocks = [];
         // parse content
         let result = this.md.parse(content, {});
@@ -54,7 +35,7 @@ class MarkdownFiles {
                     block_content = os_1.default.EOL.repeat(start_line - last_end_line + 1) + block_content;
                 }
                 last_end_line = end_line;
-                blocks.push(new CommonBlock(block_content));
+                blocks.push(new block_1.CommonBlock(block_content));
                 return;
             }
             // token.type == "inline"
@@ -92,7 +73,7 @@ class MarkdownFiles {
                         }
                     }
                     // regular expression match image content, and push all block
-                    let exp = new RegExp('!\\[\\s*?' + reg_exp_escape(alt) + '\\s*?\\]' + '\\(\\s*?' + reg_exp_escape(src) + '\\s*?' + '"?' + reg_exp_escape(title) + '"?\\s*?\\)');
+                    let exp = new RegExp('!\\[\\s*?' + (0, utils_1.reg_exp_escape)(alt) + '\\s*?\\]' + '\\(\\s*?' + (0, utils_1.reg_exp_escape)(src) + '\\s*?' + '"?' + (0, utils_1.reg_exp_escape)(title) + '"?\\s*?\\)');
                     let match_info = exp.exec(token_content);
                     if (match_info == null) {
                         console.log("error: image regular expression match failed!");
@@ -103,8 +84,8 @@ class MarkdownFiles {
                     let ahead_block_content = token_content.slice(0, image_content_index);
                     token_content = token_content.slice(image_content_index + image_content.length);
                     // push ahead common block and image block
-                    blocks.push(new CommonBlock(ahead_block_content));
-                    blocks.push(new ImageBlock(src, alt, title));
+                    blocks.push(new block_1.CommonBlock(ahead_block_content));
+                    blocks.push(new block_1.ImageBlock(src, alt, title));
                 }
                 if (next_token.children) {
                     // if is not image, add children
@@ -112,30 +93,17 @@ class MarkdownFiles {
                 }
             }
             // push last common block
-            blocks.push(new CommonBlock(token_content));
+            blocks.push(new block_1.CommonBlock(token_content));
         });
         return blocks;
     }
     // unparse blocks to markdown text
-    _unparse(blocks) {
+    unparse(blocks) {
         let content = "";
         blocks.forEach((block) => {
             content += block.get_content();
         });
         return content;
     }
-    // copy test
-    copy(src, desc) {
-        let input = fs_extra_1.default.readFileSync(src).toString();
-        let blocks = this._parse(input);
-        console.log(blocks);
-        if (!blocks)
-            return false;
-        let origin_content = this._unparse(blocks);
-        fs_extra_1.default.writeFileSync(desc, origin_content);
-        console.log(input == origin_content);
-        return true;
-    }
 }
-var files = new MarkdownFiles();
-files.copy("test.md", "copied_test.md");
+exports.MarkdownParser = MarkdownParser;

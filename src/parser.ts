@@ -1,50 +1,11 @@
 import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token";
-import fs from "fs-extra";
 import os from "os";
+import {reg_exp_escape} from "./utils";
+import {Block, CommonBlock, ImageBlock} from "./block";
 
 
-function reg_exp_escape(raw_str: string): string {
-    return raw_str.replace(/[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g, '\\$&');
-}
-
-
-interface Block {
-    get_content(): string
-}
-
-
-class CommonBlock implements Block {
-    private content: string
-
-    constructor(content: string) {
-        this.content = content;
-    }
-
-    public get_content(): string{
-        return this.content;
-    }
-}
-
-
-class ImageBlock implements Block{
-    private src: string
-    private alt: string
-    private title: string
-
-    constructor(src: string, alt: string, title: string) {
-        this.src = src;
-        this.alt = alt;
-        this.title = title;
-    }
-
-    public get_content(): string {
-        return `![${this.alt}](${this.src}` + (this.title ? ` "${this.title}" `: "") + `)`;
-    }
-}
-
-
-class MarkdownFiles {
+class MarkdownParser {
     md: MarkdownIt
 
     constructor() {
@@ -52,7 +13,7 @@ class MarkdownFiles {
     }
 
     // parse markdown text to blocks(common text or image text)
-    private _parse(content: string): Block[] | null {
+    public parse(content: string): Block[] | null {
         let blocks: Block[] = [];
 
         // parse content
@@ -152,31 +113,14 @@ class MarkdownFiles {
     }
 
     // unparse blocks to markdown text
-    private _unparse(blocks: Block[]): string {
+    public unparse(blocks: Block[]): string {
         let content: string = "";
         blocks.forEach((block: Block) => {
            content += block.get_content(); 
         })
         return content;
     }
-
-    // copy test
-    // JUST TEST!!!!!!! REMEMBER TO DELETE IT !!!!!
-    public copy(src: string, desc: string): boolean {
-        let input: string = fs.readFileSync(src).toString();
-        let blocks: Block[] | null = this._parse(input);
-        console.log(blocks);
-
-        if (!blocks) return false;
-
-        let origin_content: string = this._unparse(blocks);
-        fs.writeFileSync(desc, origin_content);
-
-        console.log(input == origin_content);
-        return true;
-    }
 }
 
 
-var files = new MarkdownFiles();
-files.copy("test.md", "copied_test.md");
+export {MarkdownParser};
