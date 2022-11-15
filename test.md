@@ -83,5 +83,4 @@ options = {
 
 
 
-![这是图片](https://markdown.com.cn/assets/img/philly-magic-garden.9c0b4415.jpg)
-![这是图片](./image.jpg)
+![这是图片](image_from/image.jpg)
