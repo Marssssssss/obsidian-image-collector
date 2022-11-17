@@ -1,4 +1,4 @@
-import {norm_path_sep} from "./utils";
+import utils from "./utils";
 
 // markdown content block
 interface Block {
@@ -31,7 +31,7 @@ class ImageBlock implements Block{
     }
 
     public get_content(): string {
-        return `![${this.alt}](${norm_path_sep(this.src)}` + (this.title ? ` "${this.title}" `: "") + `)`;
+        return `![${this.alt}](${utils.norm_path_sep(this.src)}` + (this.title ? ` "${this.title}" `: "") + `)`;
     }
 }
 

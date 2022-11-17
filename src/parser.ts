@@ -1,7 +1,7 @@
 import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token";
 import os from "os";
-import {reg_exp_escape} from "./utils";
+import utils from "./utils";
 import {Block, CommonBlock, ImageBlock} from "./block";
 
 
@@ -83,7 +83,7 @@ class MarkdownParser {
                     }
 
                     // regular expression match image content, and push all block
-                    let exp: RegExp = new RegExp('!\\[\\s*?' + reg_exp_escape(alt) + '\\s*?\\]' + '\\(\\s*?' + reg_exp_escape(src) + '\\s*?' + '"?' + reg_exp_escape(title) + '"?\\s*?\\)');
+                    let exp: RegExp = new RegExp('!\\[\\s*?' + utils.reg_exp_escape(alt) + '\\s*?\\]' + '\\(\\s*?' + utils.reg_exp_escape(src) + '\\s*?' + '"?' + utils.reg_exp_escape(title) + '"?\\s*?\\)');
                     let match_info: RegExpExecArray | null = exp.exec(token_content);
                     if (match_info == null) {
                         console.log("error: image regular expression match failed!");
