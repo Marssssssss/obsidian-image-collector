@@ -82,6 +82,11 @@ class MarkdownParser {
                         }
                     }
 
+                    // TODO: temply not dealing with url type image
+                    if (utils.is_url(src)) {
+                        continue;
+                    }
+
                     // regular expression match image content, and push all block
                     let exp: RegExp = new RegExp('!\\[\\s*?' + utils.reg_exp_escape(alt) + '\\s*?\\]' + '\\(\\s*?' + utils.reg_exp_escape(src) + '\\s*?' + '"?' + utils.reg_exp_escape(title) + '"?\\s*?\\)');
                     let match_info: RegExpExecArray | null = exp.exec(token_content);
