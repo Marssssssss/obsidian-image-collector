@@ -13,12 +13,13 @@ class MarkdownParser {
     }
 
     // parse markdown text to blocks(common text or image text)
+    // this function will use all possible new line expression(\r\n or \n), but only use os.EOL to join lines
     public parse(content: string): Block[] | null {
         let blocks: Block[] = [];
 
         // parse content
         let result: Token[] = this.md.parse(content, {});
-        let line_split: string[] = content.split(os.EOL);
+        let line_split: string[] = content.split(utils.new_line_reg_exp);
         let last_end_line: number = 1; // first token should not get head LF
 
         result.forEach((token: Token) => {
@@ -91,7 +92,7 @@ class MarkdownParser {
                     let exp: RegExp = new RegExp('!\\[\\s*?' + utils.reg_exp_escape(alt) + '\\s*?\\]' + '\\(\\s*?' + utils.reg_exp_escape(src) + '\\s*?' + '"?' + utils.reg_exp_escape(title) + '"?\\s*?\\)');
                     let match_info: RegExpExecArray | null = exp.exec(token_content);
                     if (match_info == null) {
-                        console.log("error: image regular expression match failed!");
+                        console.log(`error: image regular expression match failed! origin image src: ${src} token_content: ${token_content}`);
                         return null;
                     }
                     let image_content: string = match_info[0];

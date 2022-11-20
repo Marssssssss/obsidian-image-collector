@@ -1,3 +1,3 @@
 这是文字。
 
-![这是图片](image_to/image.jpg)
+![这是图片](all_images/image.jpg)
