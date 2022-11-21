@@ -37,7 +37,6 @@ class MainLogic {
         // collect all possible image ext
         let images: Map<string, Map<string, string[]>> = new Map<string, Map<string, string[]>>();
         let md_paths: string[] = utils.collect_files(md_dir, ".md");
-        console.log(md_paths);
         for (let md_path of md_paths) {
             let file_content: string = fs.readFileSync(md_path).toString();
             let blocks: Block[] | null = this.md_parser.parse(file_content);
@@ -195,4 +194,4 @@ class MainLogic {
 let main_logic = new MainLogic();
 // main_logic.move_image_to_target_dir(path.resolve("../big_test_md/notes/计算机/框架工具学习/笔记工具/Obsidian/Obsidian 插件开发.md"), path.resolve("../big_test_md/new_attachments"));
 // main_logic.collect_markdown_images_to_target_dir(path.resolve("../test_md"), path.resolve("../test_md/image_new"));
-console.log(main_logic.collect_markdown_images_by_file_name(path.resolve("../big_test_md"), path.resolve("../big_test_md/new_attachments")));
+console.log(main_logic.collect_markdown_images_by_file_name(path.resolve("../big_test_md"), path.resolve("../big_test_md/attachments")));
