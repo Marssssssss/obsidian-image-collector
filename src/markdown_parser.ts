@@ -2,8 +2,40 @@ import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token";
 import os from "os";
 import utils from "./utils";
-import {Block, CommonBlock, ImageBlock} from "./block";
 
+interface Block {
+    get_content(): string
+}
+
+
+class CommonBlock implements Block {
+    public content: string
+
+    constructor(content: string) {
+        this.content = content;
+    }
+
+    public get_content(): string{
+        return this.content;
+    }
+}
+
+
+class ImageBlock implements Block{
+    public src: string
+    public alt: string
+    public title: string
+
+    constructor(src: string, alt: string, title: string) {
+        this.src = src;
+        this.alt = alt;
+        this.title = title;
+    }
+
+    public get_content(): string {
+        return `![${this.alt}](${utils.norm_path_sep(this.src)}` + (this.title ? ` "${this.title}" `: "") + `)`;
+    }
+}
 
 class MarkdownParser {
     md: MarkdownIt
@@ -119,7 +151,7 @@ class MarkdownParser {
     }
 
     // unparse blocks to markdown text
-    public unparse(blocks: Block[]): string {
+    public unparse(blocks: Block[]) {
         let content: string = "";
         blocks.forEach((block: Block) => {
            content += block.get_content(); 
@@ -128,5 +160,4 @@ class MarkdownParser {
     }
 }
 
-
-export {MarkdownParser};
+export {Block, CommonBlock, ImageBlock, MarkdownParser};

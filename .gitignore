@@ -1,3 +1,4 @@
 node_modules/
 out/
-big_test_md/
+build/
+.DS_Store
