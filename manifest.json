@@ -1,0 +1,8 @@
+{
+    "id": "obsidian-image-manager",
+    "name": "Obsidian Image Manager",
+    "description": "Manage images in your vault~",
+    "isDesktopOnly": true,
+    "js": "main.js",
+    "version": "2.9.4"
+}

@@ -21,11 +21,11 @@ class AccurateSearch implements IImageGropeStrategy{
 
 class FileNameSearch implements IImageGropeStrategy {
     tip: string = 
-    `File name search strategy will search image by file name in the url. Search root path is vault root path by default
-    Sensitive to duplicated image names!!!!!!!
-    Sensitive to duplicated image names!!!!!!!
-    Sensitive to duplicated image names!!!!!!!
-    Process collect duplicated image by name and deal with duplicated images before processing this strategy!`;
+    `File name search strategy will search image by file name in the url. Search root path is vault root path by default\n
+    Sensitive to duplicated image names!!!!!!!\n
+    Sensitive to duplicated image names!!!!!!!\n
+    Sensitive to duplicated image names!!!!!!!\n
+    Process collect duplicated image by name and deal with duplicated images before processing this strategy!\n`;
 
     async search(plugin: Plugin, image_manager: ImageManager, target_path: string): Promise<string | null> {
         let base_name: string = path.basename(target_path);
