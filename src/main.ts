@@ -87,7 +87,7 @@ export default class ObsidianImageCollector extends Plugin {
             let file_path = listed_files[index];
             if (path.extname(file_path) !== ".md")
                 continue;
-            this._collect_file_images(file_path);
+            await this._collect_file_images(file_path);
         }
         for (let index in listed_folders) {
             let folder_path = listed_folders[index];

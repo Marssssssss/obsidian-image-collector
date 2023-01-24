@@ -18,6 +18,7 @@ export class ImageManager {
         if (await this.plugin.app.vault.adapter.exists(this.base_path)) {
             return;
         }
+        console.log("???");
         await this.plugin.app.vault.createFolder(this.base_path);
     }
 
