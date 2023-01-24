@@ -15,13 +15,13 @@ export default class ObsidianImageManager extends Plugin {
 
     async onload() {
         console.log("loading " + this.manifest.name + "name");
+        await this.load_settings()
 
         this.md_parser = new MarkdownParser();
-        this.image_manager = new ImageManager("./test", this);
+        this.image_manager = new ImageManager(this.settings?.image_root_path as string, this);
 
         this.register_events();
 
-        await this.loadSettings()
         this.addSettingTab(new ObsidianImageManagerSettingsTab(this.app, this));
     }
 
@@ -56,7 +56,7 @@ export default class ObsidianImageManager extends Plugin {
         );
     }
 
-    async loadSettings() {
+    async load_settings() {
         let data: ObsidianImageManagerSettings = await this.loadData();
         if (data == undefined) {
             data = {} as any;
@@ -64,7 +64,7 @@ export default class ObsidianImageManager extends Plugin {
         this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
     }
 
-    async saveSettings() {
+    async save_settings() {
         await this.saveData(this.settings);
     }
 

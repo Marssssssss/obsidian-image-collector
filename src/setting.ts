@@ -13,6 +13,19 @@ export class ObsidianImageManagerSettingsTab extends PluginSettingTab {
         // Collect Settings
         containerEl.createEl("h2", { text: "Collect Settings"});
 
+        new Setting(containerEl)
+            .setName("Image Root Path")
+            .setDesc("Collect all images here~")
+            .addText((text_field) => {
+                text_field
+                    .setValue(plugin.settings.image_root_path)
+                    .onChange(async (text) => {
+                        plugin.settings.image_root_path = text;
+                        plugin.image_manager.reset_path(plugin.settings.image_root_path);
+                        plugin.save_settings();
+                    });
+            });
+
         let grope_strategy_tip = "The strategy used when finding a image by url.";
         let grope_strategy_el = new Setting(containerEl)
             .setName("Image Grope Strategy")
@@ -24,7 +37,7 @@ export class ObsidianImageManagerSettingsTab extends PluginSettingTab {
                 dropdown.setValue(plugin.settings.image_grope_strategy);
                 dropdown.onChange(async (option) => {
                     plugin.settings.image_grope_strategy = option;
-                    plugin.saveData();
+                    plugin.save_settings();
                 });
             });
 
@@ -39,7 +52,7 @@ export class ObsidianImageManagerSettingsTab extends PluginSettingTab {
                 dropdown.setValue(plugin.settings.image_transfer_strategy);
                 dropdown.onChange(async (option) => {
                     plugin.settings.image_transfer_strategy = option;
-                    plugin.saveData();
+                    plugin.save_settings();
                 })
             });
         
@@ -54,9 +67,11 @@ export class ObsidianImageManagerSettingsTab extends PluginSettingTab {
 export interface ObsidianImageManagerSettings {
     image_grope_strategy: string,
     image_transfer_strategy: string,
+    image_root_path: string,
 }
 
 export const DEFAULT_SETTINGS: ObsidianImageManagerSettings = {
     image_grope_strategy: DefaultGropeStrategyName,
     image_transfer_strategy: DefaultTransferStrategyName,
+    image_root_path: "images",
 }
