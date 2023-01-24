@@ -11,7 +11,7 @@ export interface IImageTransferStrategy {
 class FollowMarkdownFileName implements IImageTransferStrategy{
     tip: string = `This strategy will use markdown file name for renaming image name. If image has existed, the name will splice by a increasingly number.`;
 
-    async transfer(plugin: Plugin, image_manager: ImageManager, md_path: string, origin_image_src: string){
+    async transfer(_: Plugin, image_manager: ImageManager, md_path: string, origin_image_src: string){
         let image_name = path.basename(origin_image_src);
         let image_ext = path.extname(origin_image_src);
         let inc_num = 1;
@@ -28,7 +28,6 @@ class FollowMarkdownFileName implements IImageTransferStrategy{
         }
 
         let new_image_path = await image_manager.copy_image(origin_image_src, image_name);
-        plugin.app.vault.adapter.remove(origin_image_src);
         return new_image_path;
     }
 }

@@ -12,7 +12,7 @@ class AccurateSearch implements IImageGropeStrategy{
     tip: string = `Accurate search strategy will search image by url in markdown exactly.If the url is wrong, then search fail!`;
 
     async search(plugin: Plugin, _: ImageManager, target_path: string): Promise<string | null> {
-        if (!plugin.app.vault.adapter.exists(target_path))
+        if (!await plugin.app.vault.adapter.exists(target_path))
             return null;
         return target_path;
     }
@@ -20,12 +20,7 @@ class AccurateSearch implements IImageGropeStrategy{
 
 
 class FileNameSearch implements IImageGropeStrategy {
-    tip: string = 
-    `File name search strategy will search image by file name in the url. Search root path is vault root path by default\n
-    Sensitive to duplicated image names!!!!!!!\n
-    Sensitive to duplicated image names!!!!!!!\n
-    Sensitive to duplicated image names!!!!!!!\n
-    Process collect duplicated image by name and deal with duplicated images before processing this strategy!\n`;
+    tip: string = `File name search strategy will search image by file name in the url. Search root path is vault root path by default`;
 
     async search(plugin: Plugin, image_manager: ImageManager, target_path: string): Promise<string | null> {
         let base_name: string = path.basename(target_path);

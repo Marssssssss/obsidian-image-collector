@@ -11,10 +11,6 @@ export class ImageManager {
     }
 
     async reset_path(new_path: string) {
-        if (await this.plugin.app.vault.adapter.exists(new_path)) {
-            new Notice("Target image root path exists, please reset~");
-            return;
-        }
         this.base_path = new_path;
     }
 

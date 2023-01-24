@@ -1,4 +1,4 @@
-import { Plugin } from "obsidian";
+import { MarkdownView, Plugin, TAbstractFile } from "obsidian";
 import { ImageManager } from "./image_manager";
 import { MarkdownParser, Block, ImageBlock } from "./markdown_parser";
 import { ImageGropeStrategy, ImageGropeStrategyNameType } from "./strategy/image_grope_strategy";
@@ -95,8 +95,11 @@ export default class ObsidianImageManager extends Plugin {
         }
     }
 
-    private async _collect_file_images(file_path: string) {
-        let file_content = await this.app.vault.adapter.read(file_path);
+    private async _collect_file_images(file_path: string, file_content?: string) {
+        if (!file_content) {
+            file_content = await this.app.vault.adapter.read(file_path);
+        }
+
         let blocks: Block[] | null | undefined = this.md_parser?.parse(file_content);
         if (blocks === null || blocks === undefined)
             return;

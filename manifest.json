@@ -1,7 +1,7 @@
 {
-    "id": "obsidian-image-manager",
-    "name": "Obsidian Image Manager",
-    "description": "Manage images in your vault~",
+    "id": "俺的图片管理器",
+    "name": "俺的图片管理器",
+    "description": "玩得开心～",
     "isDesktopOnly": true,
     "js": "main.js",
     "version": "2.9.4"

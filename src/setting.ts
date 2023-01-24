@@ -26,10 +26,9 @@ export class ObsidianImageManagerSettingsTab extends PluginSettingTab {
                     });
             });
 
-        let grope_strategy_tip = "The strategy used when finding a image by url.";
         let grope_strategy_el = new Setting(containerEl)
             .setName("Image Grope Strategy")
-            .setDesc(grope_strategy_tip)
+            .setDesc(ImageGropeStrategy[plugin.settings.image_grope_strategy as ImageGropeStrategyNameType].tip)
             .addDropdown((dropdown) => {
                 Object.keys(ImageGropeStrategy).forEach((strategy_name, _, __) => {
                     dropdown.addOption(strategy_name, strategy_name);
@@ -41,10 +40,9 @@ export class ObsidianImageManagerSettingsTab extends PluginSettingTab {
                 });
             });
 
-        let translate_strategy_tip = "The strategy used when transfer origin image to target path, and the path is dictated by strategy.";
         let translate_strategy_el = new Setting(containerEl)
             .setName("Image Transfer Strategy")
-            .setDesc(translate_strategy_tip)
+            .setDesc(ImageTransferStrategy[plugin.settings.image_transfer_strategy as ImageTransferStrategyNameType].tip)
             .addDropdown((dropdown) => {
                 Object.keys(ImageTransferStrategy).forEach((strategy_name, _, __) => {
                     dropdown.addOption(strategy_name, strategy_name);
@@ -56,9 +54,9 @@ export class ObsidianImageManagerSettingsTab extends PluginSettingTab {
                 })
             });
         
-        containerEl.onClickEvent((_) => {
-            grope_strategy_el.setDesc(ImageGropeStrategy[plugin.settings.image_grope_strategy as ImageGropeStrategyNameType].tip || grope_strategy_tip);
-            translate_strategy_el.setDesc(ImageTransferStrategy[plugin.settings.image_transfer_strategy as ImageTransferStrategyNameType].tip || translate_strategy_tip);
+        containerEl.on("change", "*", (_, __) => {
+            grope_strategy_el.setDesc(ImageGropeStrategy[plugin.settings.image_grope_strategy as ImageGropeStrategyNameType].tip);
+            translate_strategy_el.setDesc(ImageTransferStrategy[plugin.settings.image_transfer_strategy as ImageTransferStrategyNameType].tip);
         });
     }
 }
