@@ -30,15 +30,15 @@ npm run build
 ### 接入 obsidian
 构建完成后，本地将多出一个 `build` 目录，首先进入配置面板：
 
-![](./img/open_plugin_folder1.jpg)
+![image](./img/open_plugin_folder1.png)
 
 进入第三方插件选项卡，然后点击文件夹图标打开第三方插件目录：
 
-![](./img/open_plugin_folder2.jpg)
+![image](./img/open_plugin_folder2.png)
 
 创建一个文件夹（建议叫 `obsidian-img-manager`），然后将 `manifest.json` 和 `build/main.js` 复制进去。这些操作完成后，刷新并重新加载插件：
 
-![](./img/open_plugin_folder3.jpg)
+![image](./img/open_plugin_folder3.png)
 
 之后就可以使用了。
 ### 使用方式
