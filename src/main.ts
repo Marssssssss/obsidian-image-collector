@@ -1,15 +1,15 @@
-import { MarkdownView, Plugin, TAbstractFile } from "obsidian";
+import { Plugin } from "obsidian";
 import { ImageManager } from "./image_manager";
 import { MarkdownParser, Block, ImageBlock } from "./markdown_parser";
 import { ImageGropeStrategy, ImageGropeStrategyNameType } from "./strategy/image_grope_strategy";
 import { ImageTransferStrategy, ImageTransferStrategyNameType } from "./strategy/image_transfer_strategy";
 import utils from "./utils";
 import path from "path";
-import { DEFAULT_SETTINGS, ObsidianImageManagerSettings, ObsidianImageManagerSettingsTab } from "./setting";
+import { DEFAULT_SETTINGS, ObsidianImageCollectorSettings, ObsidianImageCollectorSettingsTab } from "./setting";
 
 
-export default class ObsidianImageManager extends Plugin {
-    settings: ObsidianImageManagerSettings | undefined;
+export default class ObsidianImageCollector extends Plugin {
+    settings: ObsidianImageCollectorSettings | undefined;
     md_parser: MarkdownParser | undefined;
     image_manager: ImageManager | undefined;
 
@@ -22,7 +22,7 @@ export default class ObsidianImageManager extends Plugin {
 
         this.register_events();
 
-        this.addSettingTab(new ObsidianImageManagerSettingsTab(this.app, this));
+        this.addSettingTab(new ObsidianImageCollectorSettingsTab(this.app, this));
     }
 
     register_events() {
@@ -57,7 +57,7 @@ export default class ObsidianImageManager extends Plugin {
     }
 
     async load_settings() {
-        let data: ObsidianImageManagerSettings = await this.loadData();
+        let data: ObsidianImageCollectorSettings = await this.loadData();
         if (data == undefined) {
             data = {} as any;
         }

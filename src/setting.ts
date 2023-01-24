@@ -3,7 +3,7 @@ import { DefaultGropeStrategyName, ImageGropeStrategy, ImageGropeStrategyNameTyp
 import { DefaultTransferStrategyName, IImageTransferStrategy, ImageTransferStrategy, ImageTransferStrategyNameType } from "./strategy/image_transfer_strategy"
 
 
-export class ObsidianImageManagerSettingsTab extends PluginSettingTab {
+export class ObsidianImageCollectorSettingsTab extends PluginSettingTab {
     display(): void {
         const { containerEl } = this;
         const plugin = (this as any).plugin;
@@ -62,13 +62,13 @@ export class ObsidianImageManagerSettingsTab extends PluginSettingTab {
 }
 
 
-export interface ObsidianImageManagerSettings {
+export interface ObsidianImageCollectorSettings {
     image_grope_strategy: string,
     image_transfer_strategy: string,
     image_root_path: string,
 }
 
-export const DEFAULT_SETTINGS: ObsidianImageManagerSettings = {
+export const DEFAULT_SETTINGS: ObsidianImageCollectorSettings = {
     image_grope_strategy: DefaultGropeStrategyName,
     image_transfer_strategy: DefaultTransferStrategyName,
     image_root_path: "images",

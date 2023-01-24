@@ -1,4 +1,4 @@
-## 什么是 obsidian-image-manager？
+## 什么是 obsidian-image-collector？
 
 这是一个用于管理图片的简单插件，是个人为了管理本地的一些图片开发的插件，目前具有如下功能：
 
@@ -44,7 +44,7 @@ npm run build
 
 ![image](./img/open_plugin_folder2.png)
 
-创建一个文件夹（建议叫 `obsidian-img-manager`），然后将 `manifest.json` 和 `build/main.js` 复制进去。这些操作完成后，刷新并重新加载插件：
+创建一个文件夹（建议叫 `obsidian-image-collector`），然后将 `manifest.json` 和 `build/main.js` 复制进去。这些操作完成后，刷新并重新加载插件：
 
 ![image](./img/open_plugin_folder3.png)
 
