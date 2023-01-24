@@ -1,26 +1,28 @@
-import {Plugin} from "obsidian";
+import { Plugin } from "obsidian";
 import { ImageManager } from "./image_manager";
 import { MarkdownParser, Block, ImageBlock } from "./markdown_parser";
-import {IImageGropeStrategy, ImageGropeStrategy} from "./strategy/image_grope_strategy";
-import {IImageTransferStrategy, ImageTransferStrategy} from "./strategy/image_transfer_strategy";
+import { ImageGropeStrategy, ImageGropeStrategyNameType } from "./strategy/image_grope_strategy";
+import { ImageTransferStrategy, ImageTransferStrategyNameType } from "./strategy/image_transfer_strategy";
 import utils from "./utils";
 import path from "path";
+import { DEFAULT_SETTINGS, ObsidianImageManagerSettings, ObsidianImageManagerSettingsTab } from "./setting";
+
 
 export default class ObsidianImageManager extends Plugin {
+    settings: ObsidianImageManagerSettings | undefined;
     md_parser: MarkdownParser | undefined;
     image_manager: ImageManager | undefined;
-    image_grope_strategy: IImageGropeStrategy | undefined;
-    image_transfer_strategy: IImageTransferStrategy | undefined;
 
     async onload() {
         console.log("loading " + this.manifest.name + "name");
 
         this.md_parser = new MarkdownParser();
         this.image_manager = new ImageManager("./test", this);
-        this.image_grope_strategy = ImageGropeStrategy.AccurateSearch;
-        this.image_transfer_strategy = ImageTransferStrategy.FollowMarkdownFileName;
 
         this.register_events();
+
+        await this.loadSettings()
+        this.addSettingTab(new ObsidianImageManagerSettingsTab(this.app, this));
     }
 
     register_events() {
@@ -52,6 +54,18 @@ export default class ObsidianImageManager extends Plugin {
                     });
             })
         );
+    }
+
+    async loadSettings() {
+        let data: ObsidianImageManagerSettings = await this.loadData();
+        if (data == undefined) {
+            data = {} as any;
+        }
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
+    }
+
+    async saveSettings() {
+        await this.saveData(this.settings);
     }
 
     async collect_file_images(file_path: string) {
@@ -93,18 +107,29 @@ export default class ObsidianImageManager extends Plugin {
                 continue;
             }
 
-            let image_src = utils.trans_url_space_to_path_space(block.src);
-            let old_image_path = await this.image_grope_strategy?.search(this, path.join(old_dir_path, image_src));
-            if (old_image_path === null)
+            let strategy_name = this.settings?.image_grope_strategy;
+            if (!strategy_name) {
+                // error
+                continue;
+            }
+            let old_image_path = await ImageGropeStrategy[strategy_name as ImageGropeStrategyNameType]?.search(this, this.image_manager as ImageManager, path.join(old_dir_path, utils.decode_markdown_uri(block.src)));
+            if (!old_image_path)
                 continue;
 
-            let new_image_path = await this.image_transfer_strategy?.transfer(this, this.image_manager as ImageManager, file_path, image_src);
-            if (new_image_path === null)
+            strategy_name = this.settings?.image_transfer_strategy;
+            if (!strategy_name) {
+                // error
+                continue
+            }
+            let new_image_path = await ImageTransferStrategy[strategy_name as ImageTransferStrategyNameType]?.transfer(this, this.image_manager as ImageManager, file_path, old_image_path);
+            if (!new_image_path)
                 continue;
-            block.src = utils.trans_path_space_to_url_space(path.relative(old_dir_path, new_image_path as string));
+            block.src = utils.encode_markdown_uri(path.relative(old_dir_path, new_image_path as string));
         }
 
         let new_md_content = this.md_parser?.unparse(blocks);
         new_md_content && this.app.vault.adapter.write(file_path, new_md_content);
     }
+
+    // TODO：单文件搜索所有重名图片的功能
 }

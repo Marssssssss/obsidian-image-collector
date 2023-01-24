@@ -106,7 +106,9 @@ class MarkdownParser {
                         for (let i of next_token.attrs) {
                             switch (i[0]) {
                                 case "src":
-                                    src = i[1];
+                                    // markdown it will encode all characters to percent character, here should decode to markdown url
+                                    src = decodeURI(i[1]);
+                                    src = utils.encode_markdown_uri(src);
                                     break;
                                 case "title":
                                     title = i[1];
@@ -121,7 +123,7 @@ class MarkdownParser {
                     }
 
                     // regular expression match image content, and push all block
-                    let exp: RegExp = new RegExp('!\\[\\s*?' + utils.reg_exp_escape(alt) + '\\s*?\\]' + '\\(\\s*?' + utils.reg_exp_escape(src) + '\\s*?' + '"?' + utils.reg_exp_escape(title) + '"?\\s*?\\)');
+                    let exp: RegExp = new RegExp('!\\[\\s*?' + utils.reg_exp_escape(alt) + '\\s*?\\]\\(\\s*?' + utils.reg_exp_escape(src) + '\\s*?"?' + utils.reg_exp_escape(title) + '"?\\s*?\\)');
                     let match_info: RegExpExecArray | null = exp.exec(token_content);
                     if (match_info == null) {
                         console.log(`error: image regular expression match failed! origin image src: ${src} token_content: ${token_content}`);
