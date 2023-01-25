@@ -59,7 +59,7 @@ npm run build
 
 一种转移图片策略：
 
-- 按文件名转移 `FollowMarkdownFileName`，图片转移到目标目录下，直接按照 md 文件名重命名，重复名字将在后面按数字排列；
+- 按文件名转移 `FollowMarkdownFileName`，图片转移到目标目录下，直接按照 md 文件名重命名，重复名字将在后面拼接递增的数字；
 
 #### 文件或目录右键一键收集
 
