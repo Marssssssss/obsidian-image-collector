@@ -1,6 +1,6 @@
 import { PluginSettingTab, Setting } from "obsidian";
 import { DefaultGropeStrategyName, ImageGropeStrategy, ImageGropeStrategyNameType } from "./strategy/image_grope_strategy"
-import { DefaultTransferStrategyName, IImageTransferStrategy, ImageTransferStrategy, ImageTransferStrategyNameType } from "./strategy/image_transfer_strategy"
+import { DefaultTransferStrategyName, ImageTransferStrategy, ImageTransferStrategyNameType } from "./strategy/image_transfer_strategy"
 
 
 export class ObsidianImageCollectorSettingsTab extends PluginSettingTab {
@@ -53,7 +53,22 @@ export class ObsidianImageCollectorSettingsTab extends PluginSettingTab {
                     plugin.save_settings();
                 })
             });
-        
+
+        // special logic, if use follow markdown file name, user can judge if remove file after images collection 
+        if (plugin.settings.image_transfer_strategy == "FollowMarkdownFileName") {
+            // shall move into spetific strategy class
+            new Setting(containerEl)
+                .setName("Remove after collection")
+                .setDesc("Remove source image file after collection")
+                .addToggle((toggle) => {
+                    toggle
+                        .setValue(plugin.settings.remove_after_transfer)
+                        .onChange(async (new_value) => {
+                            plugin.settings.remove_after_transfer = new_value;
+                        });
+                });
+        }
+
         containerEl.on("change", "*", (_, __) => {
             grope_strategy_el.setDesc(ImageGropeStrategy[plugin.settings.image_grope_strategy as ImageGropeStrategyNameType].tip);
             translate_strategy_el.setDesc(ImageTransferStrategy[plugin.settings.image_transfer_strategy as ImageTransferStrategyNameType].tip);
@@ -66,10 +81,12 @@ export interface ObsidianImageCollectorSettings {
     image_grope_strategy: string,
     image_transfer_strategy: string,
     image_root_path: string,
+    remove_after_transfer: boolean,
 }
 
 export const DEFAULT_SETTINGS: ObsidianImageCollectorSettings = {
     image_grope_strategy: DefaultGropeStrategyName,
     image_transfer_strategy: DefaultTransferStrategyName,
     image_root_path: "images",
+    remove_after_transfer: false,
 }

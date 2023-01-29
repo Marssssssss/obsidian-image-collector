@@ -1,4 +1,4 @@
-import { Plugin } from "obsidian";
+import { normalizePath, Plugin } from "obsidian";
 import { ImageManager } from "./image_manager";
 import { MarkdownParser, Block, ImageBlock } from "./markdown_parser";
 import { ImageGropeStrategy, ImageGropeStrategyNameType } from "./strategy/image_grope_strategy";
@@ -43,7 +43,7 @@ export default class ObsidianImageCollector extends Plugin {
                                 if (this.image_manager === undefined) {
                                     return;
                                 }
-                                let file_stat = await this.app.vault.adapter.stat(file.path);
+                                let file_stat = await this.app.vault.adapter.stat(normalizePath(file.path));
                                 if (file_stat === null) return;
                                 else if (file_stat.type === "file") {
                                     this.collect_file_images(file.path);
@@ -80,7 +80,7 @@ export default class ObsidianImageCollector extends Plugin {
         if (this.image_manager === undefined || this.image_manager === undefined)
             return;
 
-        let listed_info = await this.app.vault.adapter.list(dir_path);
+        let listed_info = await this.app.vault.adapter.list(normalizePath(dir_path));
         let listed_files = listed_info.files;
         let listed_folders = listed_info.folders;
         for (let index in listed_files) {
@@ -97,7 +97,7 @@ export default class ObsidianImageCollector extends Plugin {
 
     private async _collect_file_images(file_path: string, file_content?: string) {
         if (!file_content) {
-            file_content = await this.app.vault.adapter.read(file_path);
+            file_content = await this.app.vault.adapter.read(normalizePath(file_path));
         }
 
         let blocks: Block[] | null | undefined = this.md_parser?.parse(file_content);
@@ -131,8 +131,6 @@ export default class ObsidianImageCollector extends Plugin {
         }
 
         let new_md_content = this.md_parser?.unparse(blocks);
-        new_md_content && this.app.vault.adapter.write(file_path, new_md_content);
+        new_md_content && this.app.vault.adapter.write(normalizePath(file_path), new_md_content);
     }
-
-    // TODO：单文件搜索所有重名图片的功能
 }
