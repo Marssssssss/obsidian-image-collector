@@ -37,6 +37,22 @@ class ImageBlock implements Block{
     }
 }
 
+
+class Base64PngLinkBlock implements Block {
+    public name: string
+    public image_ref_name
+
+    constructor(name: string, image_ref_name: string) {
+        this.name = name;
+        this.image_ref_name = image_ref_name;
+    }
+
+    public get_content(): string {
+        return `![${this.name}][${this.image_ref_name}]`;
+    }
+}
+
+
 class MarkdownParser {
     md: MarkdownIt
 
@@ -162,4 +178,4 @@ class MarkdownParser {
     }
 }
 
-export {Block, CommonBlock, ImageBlock, MarkdownParser};
+export {Block, CommonBlock, ImageBlock, Base64PngLinkBlock, MarkdownParser};

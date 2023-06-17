@@ -115,7 +115,11 @@ export default class ObsidianImageCollector extends Plugin {
                 // error
                 continue;
             }
-            let old_image_path = await ImageGropeStrategy[strategy_name as ImageGropeStrategyNameType]?.search(this, this.image_manager as ImageManager, path.join(old_dir_path, utils.decode_markdown_uri(block.src)));
+            let old_image_path = await ImageGropeStrategy[strategy_name as ImageGropeStrategyNameType]?.search(
+                this, 
+                this.image_manager as ImageManager, 
+                path.join(old_dir_path, utils.decode_markdown_uri(block.src))
+            );
             if (!old_image_path)
                 continue;
 
@@ -124,7 +128,12 @@ export default class ObsidianImageCollector extends Plugin {
                 // error
                 continue
             }
-            let new_image_path = await ImageTransferStrategy[strategy_name as ImageTransferStrategyNameType]?.transfer(this, this.image_manager as ImageManager, file_path, old_image_path);
+            let new_image_path = await ImageTransferStrategy[strategy_name as ImageTransferStrategyNameType]?.transfer(
+                this, 
+                this.image_manager as ImageManager, 
+                file_path, 
+                old_image_path
+            );
             if (!new_image_path)
                 continue;
             block.src = utils.encode_markdown_uri(path.relative(old_dir_path, new_image_path as string));
